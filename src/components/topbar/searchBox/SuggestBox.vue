@@ -39,15 +39,4 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.suggest-box {
-  flex-direction: column;
-  box-sizing: border-box;
-  border-radius: 0 0 3px 3px;
-  position: absolute;
-  top: 100%;
-  background-color: inherit;
-  overflow: hidden;
-  padding-bottom: 3px;
-  width: 100%;
-}
 </style>

@@ -1,0 +1,71 @@
+.search-box {
+  background-color: white;
+  display: inline-flex;
+  position: relative;
+  justify-content: center;
+  vertical-align: top;
+  font-size: 15px;
+
+  box-sizing: border-box;
+  padding: 12px 12px 11px 12px;
+  margin: 8px 0 0 8px;
+
+  filter: drop-shadow(0 0 3px #0000002f);
+  border-radius: 3px;
+
+  &.open {
+    border-radius: 3px 3px 0 0;
+  }
+
+  :deep() .g-icon.point-mark, :deep() .point-mark {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+    margin-right: 12px;
+    margin-left: 2px;
+    color: rgb(125, 125, 125);
+    vertical-align: top;
+  }
+
+  > input {
+    font-family: 'Roboto', Arial, sans-serif;
+    font-weight: 400;
+    outline: none;
+    background-color: transparent;
+    vertical-align: baseline;
+    padding: 0;
+    border: none;
+    display: inline-block;
+    width: 300px;
+  }
+
+  .suggestion-box {
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: 0 0 3px 3px;
+    position: absolute;
+    top: 100%;
+    background-color: inherit;
+    overflow: hidden;
+    padding-bottom: 3px;
+    width: 100%;
+
+    .suggestion-item {
+      padding: 6px 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      width: 100%;
+      box-sizing: border-box;
+      overflow: hidden;
+      text-overflow:ellipsis;
+    
+      :deep() small {
+        color: #7d7d7d;
+      }
+    
+      &:hover, &.selected {
+        background-color: #e9e9e9;
+      }
+    }
+  }
+}

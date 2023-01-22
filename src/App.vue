@@ -7,13 +7,13 @@ import LMarker from './components/leaflet/LMarker/LMarker.vue';
 import LDivIcon from './components/leaflet/LMarker/LIcon/LDivIcon.vue';
 
 import Topbar from './components/topbar/Topbar.vue';
-import SuggestItem from './components/topbar/searchBox/SuggestItem.vue';
-import SearchBox from './components/topbar/searchBox/SearchBox.vue';
 import GIcon from './components/GIcon/GIcon.vue';
 
 import { Pl3xConfigStore, Pl3xKey } from './pl3xConfigProvider';
 import L from 'leaflet';
 import { getDimensionColor, generateHeadURL } from './util';
+
+import Suggestion from 'suggestion4vue';
 
 const { currentWorld, view, leafletMap, worlds, playersInfo, load, loadWorld, centerOn, toLatLng } = inject(Pl3xKey) as Pl3xConfigStore;
 const searchInput = ref('');
@@ -23,6 +23,8 @@ const leafletReady = (map: L.Map) => {
   load();
 }
 
+console.log(Suggestion);
+
 const filteredWorlds = computed(() => searchInput.value === ''
   ? Array.from(worlds)
   : Array.from(worlds).filter(([,world]) => world.displayName.toLowerCase().includes(searchInput.value.toLowerCase())));
@@ -30,6 +32,7 @@ const filteredPlayers = computed(() => searchInput.value === ''
   ? (playersInfo.players)
   : (playersInfo.players).filter((player) => player.name.toLowerCase().includes(searchInput.value.toLowerCase())));
 </script>
+
 <template>
   <Pl3xMap :view="view" @ready="leafletReady">
     <Pl3xTileLayer v-if="currentWorld" :world="currentWorld" />
@@ -47,26 +50,39 @@ const filteredPlayers = computed(() => searchInput.value === ''
     </template>
   </Pl3xMap>
   <Topbar>
-    <SearchBox v-model="searchInput">
-      <!-- ワールド検索結果 -->
-      <SuggestItem v-for="[,world] in filteredWorlds" :key="world.name" @click="() => {loadWorld(world.name, true)}">
-        <GIcon icon="public" class="point-mark" :style="{
-          color: getDimensionColor(world.type),
-        }"/>
-        {{ world.displayName }} <small v-if="world.displayName !== world.name">{{ world.name }}</small>
-      </SuggestItem>
-      <!-- プレイヤー検索結果 -->
-      <SuggestItem v-for="player in filteredPlayers" :key="player.name" @click="() => {loadWorld(player.world, false, false).then(() => centerOn(player.x, player.z))}">
-        <img
-          :src="generateHeadURL(currentWorld?.playerTracker.nameplates.headsURL || '', player)"
-          class="point-mark pixelated"
-        >
-        {{ player.name }} <small>{{ `${player.x} | ${player.z} ${player.world !== currentWorld?.name ? `in ${player.world}` : '' }` }}</small>
-      </SuggestItem>
-    </SearchBox>
+    <Suggestion.SearchBox>
+      <GIcon icon="search" class="point-mark search-icon" />
+      <Suggestion.Input v-model="searchInput" placeholder="Pl3xMapを検索する" />
+      <Suggestion.Box>
+        <template v-if="filteredPlayers.length != 0 || filteredWorlds.length != 0">
+          <!-- ワールド検索結果 -->
+          <Suggestion.Item v-for="[,world] in filteredWorlds" :key="world.name" @pick="() => {loadWorld(world.name, true)}">
+            <GIcon icon="public" class="point-mark" :style="{
+              color: getDimensionColor(world.type),
+            }"/>
+            {{ world.displayName }} <small v-if="world.displayName !== world.name">{{ world.name }}</small>
+          </Suggestion.Item>
+
+          <!-- プレイヤー検索結果 -->
+          <template v-if="filteredPlayers.length != 0">
+            <Suggestion.Item v-for="player in filteredPlayers" :key="player.name" @pick="() => {loadWorld(player.world, false, false).then(() => centerOn(player.x, player.z))}">
+              <img
+                :src="generateHeadURL(currentWorld?.playerTracker.nameplates.headsURL || '', player)"
+                class="point-mark pixelated"
+              >
+              {{ player.name }} <small>{{ `${player.x} | ${player.z} ${player.world !== currentWorld?.name ? `in ${player.world}` : '' }` }}</small>
+            </Suggestion.Item>
+          </template>
+        </template>
+        <template v-else>
+          なんにもないよ
+        </template>
+      </Suggestion.Box>
+    </Suggestion.SearchBox>
   </Topbar>
 </template>
 
+<style lang="scss" src="./styles/suggestion.scss" scoped></style>
 <style lang="scss">
 .l-map {
   width: 100vw;

@@ -10,6 +10,7 @@
   "dependencies": {
     "@tsutoringo/vue-utils": "^0.2.1",
     "leaflet": "^1.7.1",
+    "suggestion4vue": "0.0.9",
     "vue": "^3.2.25",
     "vue-router": "^4.0.12"
   },
