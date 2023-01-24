@@ -5,13 +5,15 @@ import Pl3xTileLayer from './components/pl3x/Pl3xTileLayer.vue';
 
 import LMarker from './components/leaflet/LMarker/LMarker.vue';
 import LDivIcon from './components/leaflet/LMarker/LIcon/LDivIcon.vue';
+import LTooltip from './components/leaflet/LMarker/LTooltip/LTooltip.vue';
 
 import Topbar from './components/topbar/Topbar.vue';
 import GIcon from './components/GIcon/GIcon.vue';
+import Minetip from './components/tooltip/Minetip.vue';
 
 import { Pl3xConfigStore, Pl3xKey } from './pl3xConfigProvider';
 import L from 'leaflet';
-import { getDimensionColor, generateHeadURL } from './util';
+import { getDimension, generateHeadURL } from './util';
 
 import Suggestion from 'suggestion4vue';
 
@@ -22,8 +24,6 @@ const leafletReady = (map: L.Map) => {
   leafletMap.value = map;
   load();
 }
-
-console.log(Suggestion);
 
 const filteredWorlds = computed(() => searchInput.value === ''
   ? Array.from(worlds)
@@ -46,6 +46,21 @@ const filteredPlayers = computed(() => searchInput.value === ''
             transform: `rotateZ(${player.yaw + 180}deg)`,
           }">
         </LDivIcon>
+        <LTooltip :options="{
+          permanent: true,
+          className: 'reset',
+          offset: [5, 0]
+        }">
+          <Minetip class="nameplate">
+            <div class="title">
+              <img class="pixelated" :src="generateHeadURL(currentWorld?.playerTracker.nameplates.headsURL || '', player)" alt="頭"><small>{{ player.name }}</small>
+            </div>
+            <div class="state">
+              <img class="health" :src="`/images/health/${player.health}.png`" alt="">
+              <img class="armor"  :src="`/images/armor/${player.armor}.png`" alt="">
+            </div>
+          </Minetip>
+        </LTooltip>
       </LMarker>
     </template>
   </Pl3xMap>
@@ -57,20 +72,20 @@ const filteredPlayers = computed(() => searchInput.value === ''
         <template v-if="filteredPlayers.length != 0 || filteredWorlds.length != 0">
           <!-- ワールド検索結果 -->
           <Suggestion.Item v-for="[,world] in filteredWorlds" :key="world.name" @pick="() => {loadWorld(world.name, true)}">
-            <GIcon icon="public" class="point-mark" :style="{
-              color: getDimensionColor(world.type),
-            }"/>
-            {{ world.displayName }} <small v-if="world.displayName !== world.name">{{ world.name }}</small>
+            <img
+              :src="getDimension(world.type).iconURL"
+              class="point-mark pixelated"
+            >{{ world.displayName }}<small v-if="world.displayName !== world.name">{{ world.name }}</small>
           </Suggestion.Item>
 
           <!-- プレイヤー検索結果 -->
           <template v-if="filteredPlayers.length != 0">
+            <small>プレイヤー</small>
             <Suggestion.Item v-for="player in filteredPlayers" :key="player.name" @pick="() => {loadWorld(player.world, false, false).then(() => centerOn(player.x, player.z))}">
               <img
                 :src="generateHeadURL(currentWorld?.playerTracker.nameplates.headsURL || '', player)"
                 class="point-mark pixelated"
-              >
-              {{ player.name }} <small>{{ `${player.x} | ${player.z} ${player.world !== currentWorld?.name ? `in ${player.world}` : '' }` }}</small>
+              >{{ player.name }}<small>{{ `${player.x} | ${player.z} ${player.world !== currentWorld?.name ? `in ${player.world}` : '' }` }}</small>
             </Suggestion.Item>
           </template>
         </template>
@@ -81,6 +96,38 @@ const filteredPlayers = computed(() => searchInput.value === ''
     </Suggestion.SearchBox>
   </Topbar>
 </template>
+
+<style lang="scss" scoped>
+.minetip.nameplate {
+  .title {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+
+    img {
+      margin-right: 8px;
+      width: 14px;
+      height: 14px;
+    }
+
+    small {
+      flex: 1;
+      text-align: left;
+      display: inline-block;
+      font-size: 12px;
+    }
+  }
+
+  .state {
+    display: flex;
+    flex-direction: column;
+
+    img {
+      height: 12px;
+    }
+  }
+}
+</style>
 
 <style lang="scss" src="./styles/suggestion.scss" scoped></style>
 <style lang="scss">

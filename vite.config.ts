@@ -12,6 +12,10 @@ export default defineConfig({
         target: 'https://pl3x.freeserver.pro/',
         changeOrigin: true
       },
+      '/images': {
+        target: 'https://pl3x.freeserver.pro/',
+        changeOrigin: true
+      },
     }
   }
 })

@@ -6,18 +6,18 @@ specifiers:
   '@vitejs/plugin-vue': ^2.2.0
   leaflet: ^1.7.1
   sass: ^1.49.9
-  suggestion4vue: 0.0.9
+  suggestion4vue: 0.0.10
   typescript: ^4.5.4
   vite: ^2.8.0
   vite-plugin-vue-type-imports: ^0.1.3
   vue: ^3.2.25
-  vue-router: ^4.0.12
+  vue-router: '4'
   vue-tsc: ^0.29.8
 
 dependencies:
   '@tsutoringo/vue-utils': 0.2.8
   leaflet: 1.9.3
-  suggestion4vue: 0.0.9
+  suggestion4vue: 0.0.10
   vue: 3.2.45
   vue-router: 4.1.6_vue@3.2.45
 
@@ -928,8 +928,8 @@ packages:
     resolution: {integrity: sha512-9NykojV5Uih4lgo5So5dtw+f0JgJX30KCNI8gwhz2J9A15wD0Ml6tjHKwf6fTSa6fAdVBdZeNOs9eJ71qCk8vA==}
     deprecated: Please use @jridgewell/sourcemap-codec instead
 
-  /suggestion4vue/0.0.9:
-    resolution: {integrity: sha512-12DcxoMkoE6YGBM1XDoosmqrs2q3orsXocNl+MbbuabP5XlGcxc4TPYfQT4RussHStU3CNdXgHJWZGbc58s9Yw==}
+  /suggestion4vue/0.0.10:
+    resolution: {integrity: sha512-I+8kz8R5uYLCLoGRvaqudDqJH1l+6PfxRDCQN2GiGG94cP+B8OpMVDamgeG+LW61w6qVAS9Vza1OZLam5OLDZw==}
     dependencies:
       '@tsutoringo/vue-utils': 0.2.9
       vue: 3.2.45
