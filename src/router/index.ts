@@ -12,14 +12,3 @@ export default VueRouter.createRouter({
   history: VueRouter.createWebHistory(),
   routes
 });
-
-const fruit = [
-  'apple',
-  'banana',
-  'cherry',
-  'durian',
-  'grape',
-  'kiwi',
-  'lemon',
-  'mango'
-];
